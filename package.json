@@ -22,6 +22,9 @@
     "url": "https://github.com/yidinghan/mongoose-string-collection/issues"
   },
   "homepage": "https://github.com/yidinghan/mongoose-string-collection#readme",
+  "peerDependencies": {
+    "mongoose": "^4.9.5"
+  },
   "devDependencies": {
     "ava": "^0.19.1",
     "bluebird": "^3.5.0",
