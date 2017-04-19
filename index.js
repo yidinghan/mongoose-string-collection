@@ -93,6 +93,15 @@ const plugin = (schema, options = {}) => {
     return this.findOneAndUpdate(query, updatePatch, operationOpts).exec();
   };
 
+  const updateArguments = (collection, updateOptions) => ({
+    updatePatch: {
+      $set: {
+        [fieldName]: collection,
+      },
+    },
+    operationOpts: Object.assign(defautlUpdateOptions, updateOptions),
+  });
+
   /**
    * update document's collection filed,
    * which is first document find out by given query.
@@ -112,12 +121,7 @@ const plugin = (schema, options = {}) => {
       return Promise.reject(new Error('query should not be empty'));
     }
 
-    const updatePatch = {
-      $set: {
-        [fieldName]: collection,
-      },
-    };
-    const operationOpts = Object.assign(defautlUpdateOptions, updateOptions);
+    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions);
 
     return this.findOneAndUpdate(query, updatePatch, operationOpts).exec();
   };
@@ -144,12 +148,7 @@ const plugin = (schema, options = {}) => {
       return Promise.reject(new Error('query should not be empty'));
     }
 
-    const updatePatch = {
-      $set: {
-        [fieldName]: collection,
-      },
-    };
-    const operationOpts = Object.assign(defautlUpdateOptions, updateOptions);
+    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions);
 
     return this.update(query, updatePatch, operationOpts).exec();
   };
