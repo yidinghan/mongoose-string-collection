@@ -38,7 +38,7 @@ const plugin = (schema, options = {}) => {
   // after mongoose v4 new is an option
   // to get the updated document
   // instead of updating the previous document
-  const updateOptions = Object.assign({
+  const defautlUpdateOptions = Object.assign({
     new: true,
     upsert: true,
   }, options.updateOptions);
@@ -60,7 +60,7 @@ const plugin = (schema, options = {}) => {
    * model.getTags({ _id: 'test' }).then(console.log);
    * // ['test]
    */
-  schema.statics[methods.get] = function getCollection(query = {}) {
+  schema.statics[methods.get] = function get(query = {}) {
     return this.findOne(query).select(`${fieldName}`).then(document => document && document[fieldName]);
   };
 
@@ -76,7 +76,7 @@ const plugin = (schema, options = {}) => {
    * model.addTags({ _id: 'test' }, ['t2']).then(console.log);
    * // { _id: 'test', tags: ['t1', 't2'] }
    */
-  schema.statics[methods.add] = function addCollection(query, collection) {
+  schema.statics[methods.add] = function add(query, collection, updateOptions) {
     if (isEmpty(query)) {
       return Promise.reject(new Error('query should not be empty'));
     }
@@ -88,8 +88,9 @@ const plugin = (schema, options = {}) => {
         },
       },
     };
+    const operationOpts = Object.assign(defautlUpdateOptions, updateOptions);
 
-    return this.findOneAndUpdate(query, updatePatch, updateOptions).exec();
+    return this.findOneAndUpdate(query, updatePatch, operationOpts).exec();
   };
 
   /**
@@ -106,7 +107,7 @@ const plugin = (schema, options = {}) => {
    * model.replaceTags({ _id: 'test' }, ['t2', 't3']).then(console.log);
    * // { _id: 'test', tags: ['t2', 't3'] }
    */
-  schema.statics[methods.replace] = function replaceCollection(query, collection) {
+  schema.statics[methods.replace] = function replace(query, collection, updateOptions) {
     if (isEmpty(query)) {
       return Promise.reject(new Error('query should not be empty'));
     }
@@ -116,8 +117,9 @@ const plugin = (schema, options = {}) => {
         [fieldName]: collection,
       },
     };
+    const operationOpts = Object.assign(defautlUpdateOptions, updateOptions);
 
-    return this.findOneAndUpdate(query, updatePatch, updateOptions).exec();
+    return this.findOneAndUpdate(query, updatePatch, operationOpts).exec();
   };
 
   /**
@@ -137,7 +139,7 @@ const plugin = (schema, options = {}) => {
    * model.getTags({ _id: 'test' }).then(console.log);
    * // ['t2', 't3']
    */
-  schema.statics[methods.batchReplace] = function batchReplaceCollection(query, collection) {
+  schema.statics[methods.batchReplace] = function batchReplace(query, collection, updateOptions) {
     if (isEmpty(query)) {
       return Promise.reject(new Error('query should not be empty'));
     }
@@ -147,8 +149,9 @@ const plugin = (schema, options = {}) => {
         [fieldName]: collection,
       },
     };
+    const operationOpts = Object.assign(defautlUpdateOptions, updateOptions);
 
-    return this.update(query, updatePatch, updateOptions).exec();
+    return this.update(query, updatePatch, operationOpts).exec();
   };
 };
 
