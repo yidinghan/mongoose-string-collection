@@ -135,7 +135,7 @@ const plugin = (schema, options = {}) => {
    * model.getTags({ _id: 'test' }).then(console.log);
    * // ['t2', 't3']
    */
-  schema.statics[methods.batchReplace] = function replaceCollection(query, collection) {
+  schema.statics[methods.batchReplace] = function batchReplaceCollection(query, collection) {
     if (isEmpty(query)) {
       return Promise.reject(new Error('query should not be empty'));
     }
