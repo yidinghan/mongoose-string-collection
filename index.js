@@ -82,7 +82,7 @@ const plugin = (schema, options = {}) => {
       upsert: true,
     };
 
-    return this.findOneAndUpdate(query, updatePatch, opts).exec().tapCatch(console.log);
+    return this.findOneAndUpdate(query, updatePatch, opts).exec();
   };
 
   /**
