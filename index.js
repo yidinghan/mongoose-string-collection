@@ -12,6 +12,9 @@ const isEmpty = require('lodash.isempty');
  * @param {boolean} [options.isIndex=false] - whether index in target field
  * @param {boolean} [options.isUnique=true] - whether unique the content in the collection
  * @param {object} [options.elementOptions] - collection element options
+ * @param {object} [options.updateOptions] - collection default update options
+ *      for add, replace and get methods.
+ *      you can also override when using the specified method
  */
 const plugin = (schema, options = {}) => {
   const {
@@ -32,11 +35,13 @@ const plugin = (schema, options = {}) => {
     type: String,
     index: isIndex,
   }, options.elementOptions);
-  // new to get the updated document not the preUpdate one
-  const updateOptions = {
+  // after mongoose v4 new is an option
+  // to get the updated document
+  // instead of updating the previous document
+  const updateOptions = Object.assign({
     new: true,
     upsert: true,
-  };
+  }, options.updateOptions);
 
   schema.add({
     [fieldName]: [elementOptions],
@@ -83,13 +88,8 @@ const plugin = (schema, options = {}) => {
         },
       },
     };
-    // new to get the updated document not the preUpdate one
-    const opts = {
-      new: true,
-      upsert: true,
-    };
 
-    return this.findOneAndUpdate(query, updatePatch, opts).exec();
+    return this.findOneAndUpdate(query, updatePatch, updateOptions).exec();
   };
 
   /**
