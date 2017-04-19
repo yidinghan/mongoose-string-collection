@@ -42,6 +42,56 @@ test('elementOptions: should override default element options', (t) => {
   t.true(pathOption.caster.options.index);
 });
 
+test('updateOptions: should override default update options', (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton, {
+    updateOptions: {
+      new: false,
+    },
+  });
+  const model = getModel(schema);
+
+  const bus = {};
+  return model.create({ tags: ['t', 't1'] })
+    .then((doc) => {
+      t.truthy(doc);
+      bus.docId = doc._id;
+
+      return model.addTags({ _id: doc._id }, ['t2']);
+    })
+    .then((doc) => {
+      t.deepEqual(doc.tags, ['t', 't1']);
+
+      return model.findById(bus.docId);
+    })
+    .then(doc => t.deepEqual(doc.tags, ['t', 't1', 't2']));
+});
+
+test('updateOptions: should override default update options on specify method', (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton, {
+    updateOptions: {
+      new: false,
+    },
+  });
+  const model = getModel(schema);
+
+  const bus = {};
+  return model.create({ tags: ['t', 't1'] })
+    .then((doc) => {
+      t.truthy(doc);
+      bus.docId = doc._id;
+
+      return model.addTags({ _id: doc._id }, ['t2'], { new: true });
+    })
+    .then((doc) => {
+      t.deepEqual(doc.tags, ['t', 't1', 't2']);
+
+      return model.findById(bus.docId);
+    })
+    .then(doc => t.deepEqual(doc.tags, ['t', 't1', 't2']));
+});
+
 test('fieldName: should exists target filed name', (t) => {
   const schema = new mongoose.Schema();
   schema.plugin(stringColleciton);
