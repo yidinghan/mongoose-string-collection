@@ -32,6 +32,11 @@ const plugin = (schema, options = {}) => {
     type: String,
     index: isIndex,
   }, options.elementOptions);
+  // new to get the updated document not the preUpdate one
+  const updateOptions = {
+    new: true,
+    upsert: true,
+  };
 
   schema.add({
     [fieldName]: [elementOptions],
@@ -111,13 +116,8 @@ const plugin = (schema, options = {}) => {
         [fieldName]: collection,
       },
     };
-    // new to get the updated document not the preUpdate one
-    const opts = {
-      new: true,
-      upsert: true,
-    };
 
-    return this.findOneAndUpdate(query, updatePatch, opts).exec();
+    return this.findOneAndUpdate(query, updatePatch, updateOptions).exec();
   };
 
   /**
@@ -147,11 +147,8 @@ const plugin = (schema, options = {}) => {
         [fieldName]: collection,
       },
     };
-    const opts = {
-      upsert: true,
-    };
 
-    return this.update(query, updatePatch, opts).exec();
+    return this.update(query, updatePatch, updateOptions).exec();
   };
 };
 
