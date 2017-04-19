@@ -1,4 +1,5 @@
-const _ = require('lodash');
+const upperFirst = require('lodash.upperfirst');
+const isEmpty = require('lodash.isempty');
 
 /**
  * a plugin that help schema to build string collection field
@@ -18,7 +19,7 @@ const plugin = (schema, options = {}) => {
     isUnique = true,
   } = options;
 
-  const upperName = _.upperFirst(fieldName);
+  const upperName = upperFirst(fieldName);
   const updateOperator = isUnique ? '$addToSet' : '$push';
   const methods = {
     get: `get${upperName}`,
@@ -31,7 +32,7 @@ const plugin = (schema, options = {}) => {
     [fieldName]: [{
       type: String,
       index: isIndex,
-    }]
+    }],
   });
 
   /**
@@ -64,7 +65,7 @@ const plugin = (schema, options = {}) => {
    * // { _id: 'test', tags: ['t1', 't2'] }
    */
   schema.statics[methods.add] = function addCollection(query, collection) {
-    if (_.isEmpty(query)) {
+    if (isEmpty(query)) {
       return Promise.reject(new Error('query should not be empty'));
     }
 
@@ -99,14 +100,14 @@ const plugin = (schema, options = {}) => {
    * // { _id: 'test', tags: ['t2', 't3'] }
    */
   schema.statics[methods.replace] = function replaceCollection(query, collection) {
-    if (_.isEmpty(query)) {
+    if (isEmpty(query)) {
       return Promise.reject(new Error('query should not be empty'));
     }
 
     const updatePatch = {
       $set: {
         [fieldName]: collection,
-      }
+      },
     };
     // new to get the updated document not the preUpdate one
     const opts = {
@@ -135,14 +136,14 @@ const plugin = (schema, options = {}) => {
    * // ['t2', 't3']
    */
   schema.statics[methods.batchReplace] = function replaceCollection(query, collection) {
-    if (_.isEmpty(query)) {
+    if (isEmpty(query)) {
       return Promise.reject(new Error('query should not be empty'));
     }
 
     const updatePatch = {
       $set: {
         [fieldName]: collection,
-      }
+      },
     };
     const opts = {
       upsert: true,
