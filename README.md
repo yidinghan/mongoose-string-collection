@@ -58,3 +58,5 @@ given
 | options.isIndex   | <code>boolean</code>        | whether index in target field            |
 | options.isUnique  | <code>boolean</code>        | whether unique the content in the collection |
 
+
+

@@ -6,11 +6,12 @@ const isEmpty = require('lodash.isempty');
  * which is an array containt batch string
  * given
  *
- * @param {MongooseSchema} schema - mongoose schema that need to add this plugin
- * @param {object} options - plugin configuration
- * @param {string} options.fieldName - the name place in schema
- * @param {boolean} options.isIndex - whether index in target field
- * @param {boolean} options.isUnique - whether unique the content in the collection
+ * @param {MongooseSchema} schema - mongoose schema that use this plugin
+ * @param {object} [options] - plugin configuration
+ * @param {string} [options.fieldName=tags] - the name place in schema
+ * @param {boolean} [options.isIndex=false] - whether index in target field
+ * @param {boolean} [options.isUnique=true] - whether unique the content in the collection
+ * @param {object} [options.elementOptions] - collection element options
  */
 const plugin = (schema, options = {}) => {
   const {
@@ -27,12 +28,13 @@ const plugin = (schema, options = {}) => {
     replace: `replace${upperName}`,
     batchReplace: `batchReplace${upperName}`,
   };
+  const elementOptions = Object.assign({
+    type: String,
+    index: isIndex,
+  }, options.elementOptions);
 
   schema.add({
-    [fieldName]: [{
-      type: String,
-      index: isIndex,
-    }],
+    [fieldName]: [elementOptions],
   });
 
   /**
