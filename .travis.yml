@@ -4,4 +4,7 @@ services: mongodb
 
 node_js:
 - 7
+- 7.5
 - 6
+- 5
+- 4
