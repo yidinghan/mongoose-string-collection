@@ -134,13 +134,13 @@ test('add: should success add to collection with unique opions', (t) => {
     });
 });
 
-test('add: should reject emtpy query error', (t) => {
+test('add: should reject emtpy query error', async (t) => {
   const schema = new mongoose.Schema();
   schema.plugin(stringColleciton);
   const model = getModel(schema);
 
   const promise = model.addTags();
-  t.throws(promise, 'query should not be empty');
+  await t.throws(promise, 'query should not be empty');
 });
 
 test('replace: should success replace original collection', (t) => {
@@ -164,13 +164,13 @@ test('replace: should success replace original collection', (t) => {
     .then(doc => t.deepEqual(doc.tags, ['t2']));
 });
 
-test('replace: should reject emtpy query error', (t) => {
+test('replace: should reject emtpy query error', async (t) => {
   const schema = new mongoose.Schema();
   schema.plugin(stringColleciton);
   const model = getModel(schema);
 
   const promise = model.replaceTags();
-  t.throws(promise, 'query should not be empty');
+  await t.throws(promise, 'query should not be empty');
 });
 
 test('batchReplace: should success batchReplace original collection', (t) => {
@@ -194,11 +194,11 @@ test('batchReplace: should success batchReplace original collection', (t) => {
     .then(doc => t.deepEqual(doc.tags, ['t2']));
 });
 
-test('batchReplace: should reject emtpy query error', (t) => {
+test('batchReplace: should reject emtpy query error', async (t) => {
   const schema = new mongoose.Schema();
   schema.plugin(stringColleciton);
   const model = getModel(schema);
 
   const promise = model.batchReplaceTags();
-  t.throws(promise, 'query should not be empty');
+  await t.throws(promise, 'query should not be empty');
 });
