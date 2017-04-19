@@ -13,9 +13,9 @@ const getModel = (schema) => {
 
   return db.model(collectionName, schema);
 };
-const minimalValidate = (t, pathOption) => {
+const minimalValidate = (t, pathOption, casterType = 'String') => {
   t.is(pathOption.instance, 'Array');
-  t.is(pathOption.caster.instance, 'String');
+  t.is(pathOption.caster.instance, casterType);
 };
 
 test.after.always('clean up tmp collection', () => {
@@ -26,6 +26,20 @@ test.after.always('clean up tmp collection', () => {
   return Promise.fromNode(callback => db.db.listCollections({ name: /^tmp/ }).toArray(callback))
     .map(collection => collection.name)
     .map(dropCollection);
+});
+
+test('elementOptions: should override default element options', (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton, {
+    elementOptions: {
+      index: true,
+    },
+  });
+  const pathOption = schema.path('tags');
+
+  t.truthy(pathOption);
+  minimalValidate(t, pathOption);
+  t.true(pathOption.caster.options.index);
 });
 
 test('fieldName: should exists target filed name', (t) => {
