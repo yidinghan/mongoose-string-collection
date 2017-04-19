@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.5.0"></a>
+# [0.5.0](https://github.com/yidinghan/mongoose-string-collection/compare/v0.4.0...v0.5.0) (2017-04-19)
+
+
+### Features
+
+* **plugin:** support override default element options ([d30eff0](https://github.com/yidinghan/mongoose-string-collection/commit/d30eff0))
+* **plugin:** support override default update options ([c1d5da6](https://github.com/yidinghan/mongoose-string-collection/commit/c1d5da6))
+* **plugin:** support override update options when using specify method ([984084a](https://github.com/yidinghan/mongoose-string-collection/commit/984084a))
+
+
+
 <a name="0.4.0"></a>
 # [0.4.0](https://github.com/yidinghan/mongoose-string-collection/compare/v0.3.0...v0.4.0) (2017-04-19)
 
