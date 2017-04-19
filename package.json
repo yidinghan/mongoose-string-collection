@@ -1,0 +1,25 @@
+{
+  "name": "mongoose-string-collection",
+  "version": "0.1.0",
+  "description": "A mongoose plugin that can help you quickly develop string collection related requirements",
+  "main": "index.js",
+  "scripts": {
+    "test": "ava"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yidinghan/mongoose-string-collection.git"
+  },
+  "keywords": [
+    "mongoose",
+    "plugin",
+    "string",
+    "collection"
+  ],
+  "author": "yidinghan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yidinghan/mongoose-string-collection/issues"
+  },
+  "homepage": "https://github.com/yidinghan/mongoose-string-collection#readme"
+}
