@@ -38,18 +38,6 @@ model.getTags({ id: 'thisisid' });
   .then(console.log) // ['thisistag', 'thisistagbro']
 ```
 
-# Methods
-
-### Get Collection
-
-### Add Element
-
-### Remove Element
-
-### Replace Collection
-
-### Batch Replace Collection
-
 # Configuration
 
 ### Different Field Name
@@ -122,15 +110,150 @@ model.getDingding({ id: 'thisisid' });
 
 
 
+# JSDoc
 
+## Objects
 
+<dl>
+<dt><a href="#model">model</a> : <code>object</code></dt>
+<dd></dd>
+</dl>
+
+## Functions
+
+<dl>
+<dt><a href="#plugin">plugin(schema, [options])</a></dt>
+<dd><p>a plugin that help schema to build string collection field
+which is an array containt batch string</p>
+</dd>
+</dl>
+
+<a name="model"></a>
+
+## model : <code>object</code>
+**Kind**: global namespace  
+
+* [model](#model) : <code>object</code>
+    * [.get([query])](#model.get) ⇒ <code>Promise.&lt;array&gt;</code>
+    * [.remove(query, collection)](#model.remove) ⇒ <code>Promise.&lt;object&gt;</code>
+    * [.add(query, collection)](#model.add) ⇒ <code>Promise.&lt;object&gt;</code>
+    * [.replace(query, collection)](#model.replace) ⇒ <code>Promise.&lt;object&gt;</code>
+    * [.batchReplace(query, collection)](#model.batchReplace) ⇒ <code>Promise.&lt;object&gt;</code>
+
+<a name="model.get"></a>
+
+### model.get([query]) ⇒ <code>Promise.&lt;array&gt;</code>
+sugar method that get target filed as single result
+
+**Kind**: static method of <code>[model](#model)</code>  
+**Returns**: <code>Promise.&lt;array&gt;</code> - target field  
+
+| Param   | Type                | Default         | Description                              |
+| ------- | ------------------- | --------------- | ---------------------------------------- |
+| [query] | <code>object</code> | <code>{}</code> | mongoose query that place in this.findOne |
+
+**Example**  
+```js
+model.getTags({ _id: 'targetnotexists' }).then(console.log);
+// undefined
+
+model.insert({ _id: 'test', tags: ['test'] });
+model.getTags({ _id: 'test' }).then(console.log);
+// ['test]
+```
+<a name="model.remove"></a>
+
+### model.remove(query, collection) ⇒ <code>Promise.&lt;object&gt;</code>
+remove element array from target field
+
+**Kind**: static method of <code>[model](#model)</code>  
+**Returns**: <code>Promise.&lt;object&gt;</code> - updated target document  
+
+| Param      | Type                | Description                              |
+| ---------- | ------------------- | ---------------------------------------- |
+| query      | <code>object</code> | mongoose query to find out update target |
+| collection | <code>array</code>  | string collection will remove from target document |
+
+**Example**  
+```js
+// { _id: 'test', tags: ['t1', 't2'] }
+model.removeTags({ _id: 'test' }, ['t1']).then(console.log);
+// { _id: 'test', tags: ['t2'] }
+model.removeTags({ _id: 'test' }, ['t2']).then(console.log);
+// { _id: 'test', tags: [] }
+```
+<a name="model.add"></a>
+
+### model.add(query, collection) ⇒ <code>Promise.&lt;object&gt;</code>
+add string array to target field
+
+**Kind**: static method of <code>[model](#model)</code>  
+**Returns**: <code>Promise.&lt;object&gt;</code> - updated target document  
+
+| Param      | Type                | Description                              |
+| ---------- | ------------------- | ---------------------------------------- |
+| query      | <code>object</code> | mongoose query to find out update target |
+| collection | <code>array</code>  | string collection will add to target document |
+
+**Example**  
+```js
+model.addTags({ _id: 'test' }, ['t1']).then(console.log);
+// { _id: 'test', tags: ['t1'] }
+model.addTags({ _id: 'test' }, ['t2']).then(console.log);
+// { _id: 'test', tags: ['t1', 't2'] }
+```
+<a name="model.replace"></a>
+
+### model.replace(query, collection) ⇒ <code>Promise.&lt;object&gt;</code>
+update document's collection filed,
+which is first document find out by given query.
+replace collection field with given collection
+
+**Kind**: static method of <code>[model](#model)</code>  
+**Returns**: <code>Promise.&lt;object&gt;</code> - mongoose udpate result  
+
+| Param      | Type                | Description                              |
+| ---------- | ------------------- | ---------------------------------------- |
+| query      | <code>object</code> | mongoose query to find out update target |
+| collection | <code>array</code>  | string collection will add to target document |
+
+**Example**  
+```js
+model.replaceTags({ _id: 'test' }, ['t1']).then(console.log);
+// { _id: 'test', tags: ['t1'] }
+model.replaceTags({ _id: 'test' }, ['t2', 't3']).then(console.log);
+// { _id: 'test', tags: ['t2', 't3'] }
+```
+<a name="model.batchReplace"></a>
+
+### model.batchReplace(query, collection) ⇒ <code>Promise.&lt;object&gt;</code>
+batch update documents' collection filed
+by replace it with given collection
+
+**Kind**: static method of <code>[model](#model)</code>  
+**Returns**: <code>Promise.&lt;object&gt;</code> - mongoose udpate result  
+
+| Param      | Type                | Description                              |
+| ---------- | ------------------- | ---------------------------------------- |
+| query      | <code>object</code> | mongoose query to find out update target |
+| collection | <code>array</code>  | string collection will add to target document |
+
+**Example**  
+```js
+model.batchReplaceTags({ _id: 'test' }, ['t1']).then(console.log);
+// { "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 }
+model.getTags({ _id: 'test' }).then(console.log);
+// ['t1']
+model.batchReplaceTags({ _id: 'test' }, ['t2', 't3']).then(console.log);
+// { "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 }
+model.getTags({ _id: 'test' }).then(console.log);
+// ['t2', 't3']
+```
 <a name="plugin"></a>
 
-# plugin(schema, [options])
-
+## plugin(schema, [options])
 a plugin that help schema to build string collection field
 which is an array containt batch string
-given
 
 **Kind**: global function  
 

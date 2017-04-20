@@ -1,10 +1,10 @@
 const upperFirst = require('lodash.upperfirst');
 const isEmpty = require('lodash.isempty');
 
+
 /**
  * a plugin that help schema to build string collection field
  * which is an array containt batch string
- * given
  *
  * @param {MongooseSchema} schema - mongoose schema that use this plugin
  * @param {object} [options] - plugin configuration
@@ -22,17 +22,6 @@ const plugin = (schema, options = {}) => {
     isIndex = false,
     isUnique = true,
   } = options;
-
-  const upperName = upperFirst(fieldName);
-  const pushOperator = isUnique ? '$addToSet' : '$push';
-  const pullOperator = '$pullAll';
-  const methods = {
-    get: `get${upperName}`,
-    add: `add${upperName}`,
-    remove: `remove${upperName}`,
-    replace: `replace${upperName}`,
-    batchReplace: `batchReplace${upperName}`,
-  };
   const elementOptions = Object.assign({
     type: String,
     index: isIndex,
@@ -45,13 +34,25 @@ const plugin = (schema, options = {}) => {
     upsert: true,
   }, options.updateOptions);
 
-  schema.add({
-    [fieldName]: [elementOptions],
-  });
+  const upperName = upperFirst(fieldName);
+  const pushOperator = isUnique ? '$addToSet' : '$push';
+  const pullOperator = '$pullAll';
+  const methods = {
+    get: `get${upperName}`,
+    add: `add${upperName}`,
+    remove: `remove${upperName}`,
+    replace: `replace${upperName}`,
+    batchReplace: `batchReplace${upperName}`,
+  };
+  /**
+   * @namespace model
+   */
+  const model = {};
 
   /**
    * sugar method that get target filed as single result
    *
+   * @memberof model
    * @param {object} [query={}] - mongoose query that place in this.findOne
    * @return {Promise.<array>} target field
    * @example
@@ -62,7 +63,7 @@ const plugin = (schema, options = {}) => {
    * model.getTags({ _id: 'test' }).then(console.log);
    * // ['test]
    */
-  schema.statics[methods.get] = function get(query = {}) {
+  model.get = function get(query = {}) {
     return this.findOne(query).select(`${fieldName}`).then(document => document && document[fieldName]);
   };
 
@@ -78,6 +79,7 @@ const plugin = (schema, options = {}) => {
   /**
    * remove element array from target field
    *
+   * @memberof model
    * @param {object} query - mongoose query to find out update target
    * @param {array} collection - string collection will remove from target document
    * @return {Promise.<object>} updated target document
@@ -88,7 +90,7 @@ const plugin = (schema, options = {}) => {
    * model.removeTags({ _id: 'test' }, ['t2']).then(console.log);
    * // { _id: 'test', tags: [] }
    */
-  schema.statics[methods.remove] = function remove(query, collection, updateOptions) {
+  model.remove = function remove(query, collection, updateOptions) {
     if (isEmpty(query)) {
       return Promise.reject(new Error('query should not be empty'));
     }
@@ -106,6 +108,7 @@ const plugin = (schema, options = {}) => {
   /**
    * add string array to target field
    *
+   * @memberof model
    * @param {object} query - mongoose query to find out update target
    * @param {array} collection - string collection will add to target document
    * @return {Promise.<object>} updated target document
@@ -115,7 +118,7 @@ const plugin = (schema, options = {}) => {
    * model.addTags({ _id: 'test' }, ['t2']).then(console.log);
    * // { _id: 'test', tags: ['t1', 't2'] }
    */
-  schema.statics[methods.add] = function add(query, collection, updateOptions) {
+  model.add = function add(query, collection, updateOptions) {
     if (isEmpty(query)) {
       return Promise.reject(new Error('query should not be empty'));
     }
@@ -137,6 +140,7 @@ const plugin = (schema, options = {}) => {
    * which is first document find out by given query.
    * replace collection field with given collection
    *
+   * @memberof model
    * @param {object} query - mongoose query to find out update target
    * @param {array} collection - string collection will add to target document
    * @return {Promise.<object>} mongoose udpate result
@@ -146,7 +150,7 @@ const plugin = (schema, options = {}) => {
    * model.replaceTags({ _id: 'test' }, ['t2', 't3']).then(console.log);
    * // { _id: 'test', tags: ['t2', 't3'] }
    */
-  schema.statics[methods.replace] = function replace(query, collection, updateOptions) {
+  model.replace = function replace(query, collection, updateOptions) {
     if (isEmpty(query)) {
       return Promise.reject(new Error('query should not be empty'));
     }
@@ -160,6 +164,7 @@ const plugin = (schema, options = {}) => {
    * batch update documents' collection filed
    * by replace it with given collection
    *
+   * @memberof model
    * @param {object} query - mongoose query to find out update target
    * @param {array} collection - string collection will add to target document
    * @return {Promise.<object>} mongoose udpate result
@@ -173,7 +178,7 @@ const plugin = (schema, options = {}) => {
    * model.getTags({ _id: 'test' }).then(console.log);
    * // ['t2', 't3']
    */
-  schema.statics[methods.batchReplace] = function batchReplace(query, collection, updateOptions) {
+  model.batchReplace = function batchReplace(query, collection, updateOptions) {
     if (isEmpty(query)) {
       return Promise.reject(new Error('query should not be empty'));
     }
@@ -182,6 +187,13 @@ const plugin = (schema, options = {}) => {
 
     return this.update(query, updatePatch, operationOpts).exec();
   };
+
+  schema.add({
+    [fieldName]: [elementOptions],
+  });
+  Object.keys(methods).forEach((key) => {
+    schema.statics[methods[key]] = model[key];
+  }, this);
 };
 
 module.exports = plugin;
