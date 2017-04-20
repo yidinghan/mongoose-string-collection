@@ -9,6 +9,29 @@
 
 A mongoose plugin that can help you quickly develop string collection related requirements
 
+<!-- TOC -->
+
+- [mongoose-string-collection](#mongoose-string-collection)
+- [Getting Start](#getting-start)
+  - [NPM](#npm)
+  - [Usage](#usage)
+- [Configuration](#configuration)
+    - [Different Field Name](#different-field-name)
+    - [Index Elements/Collection](#index-elementscollection)
+    - [Unique In Collection](#unique-in-collection)
+- [JSDoc](#jsdoc)
+  - [Objects](#objects)
+  - [Functions](#functions)
+  - [model : <code>object</code>](#model--codeobjectcode)
+    - [model.get([query]) ⇒ <code>Promise.&lt;array&gt;</code>](#modelgetquery-⇒-codepromiseltarraygtcode)
+    - [model.remove(query, collection) ⇒ <code>Promise.&lt;object&gt;</code>](#modelremovequery-collection-⇒-codepromiseltobjectgtcode)
+    - [model.add(query, collection) ⇒ <code>Promise.&lt;object&gt;</code>](#modeladdquery-collection-⇒-codepromiseltobjectgtcode)
+    - [model.replace(query, collection) ⇒ <code>Promise.&lt;object&gt;</code>](#modelreplacequery-collection-⇒-codepromiseltobjectgtcode)
+    - [model.batchReplace(query, collection) ⇒ <code>Promise.&lt;object&gt;</code>](#modelbatchreplacequery-collection-⇒-codepromiseltobjectgtcode)
+  - [plugin(schema, [options])](#pluginschema-options)
+
+<!-- /TOC -->
+
 # Getting Start
 
 ## NPM
