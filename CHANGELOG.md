@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.1.0"></a>
+# [1.1.0](https://github.com/yidinghan/mongoose-string-collection/compare/v1.0.0...v1.1.0) (2017-04-20)
+
+
+### Bug Fixes
+
+* **updateOptions:** lack of multi:true in option to enble batch ([64872c2](https://github.com/yidinghan/mongoose-string-collection/commit/64872c2))
+
+
+### Features
+
+* **batchAdd:** add method batchAdd to support new requirements ([2619886](https://github.com/yidinghan/mongoose-string-collection/commit/2619886))
+
+
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/yidinghan/mongoose-string-collection/compare/v0.7.0...v1.0.0) (2017-04-20)
 
