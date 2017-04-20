@@ -70,9 +70,57 @@ model.getDingding({ id: 'thisisid' });
   .then(console.log) // ['thisistag']
 ```
 
-### Index Element
+### Index Elements/Collection
+
+If want to indexs the field created by [mongoose-string-collection](https://github.com/yidinghan/mongoose-string-collection), you can set `options.isIndex` to `true`
+
+```javascript
+schema.plugin(stringCollection, {
+  isIndex: true
+});
+
+// init model, etc.
+
+const elementIndex = model.path('tags').caster.options.index;
+// true
+```
 
 ### Unique In Collection
+
+Sometimes the collection may not be a unique set of elements, but an array.
+
+If you want an array, you can set `options.isUnique` to `false`.
+
+```javascript
+schema.plugin(stringCollection, {
+  isUnique: true // default also is true
+});
+
+// init model, etc.
+
+model.addDingding({ id: 'thisisid' }, ['t', 't1']);
+model.getDingding({ id: 'thisisid' });
+  .then(console.log) // ['t', 't1']
+model.addDingding({ id: 'thisisid' }, ['t', 't2']);
+model.getDingding({ id: 'thisisid' });
+  .then(console.log) // ['t', 't1', 't2]
+
+// set isUnique to false
+schema.plugin(stringCollection, {
+  isUnique: false
+});
+
+// init model, etc.
+
+model.addDingding({ id: 'thisisid' }, ['t', 't1']);
+model.getDingding({ id: 'thisisid' });
+  .then(console.log) // ['t', 't1']
+model.addDingding({ id: 'thisisid' }, ['t', 't2']);
+model.getDingding({ id: 'thisisid' });
+  .then(console.log) // ['t', 't1', 't', 't2]
+```
+
+
 
 
 
