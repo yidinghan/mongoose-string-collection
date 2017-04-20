@@ -1,6 +1,6 @@
 {
   "name": "mongoose-string-collection",
-  "version": "0.7.0",
+  "version": "1.0.0",
   "description": "A mongoose plugin that can help you quickly develop string collection related requirements",
   "main": "index.js",
   "scripts": {
