@@ -247,6 +247,16 @@ test('add: should reject emtpy query error', async (t) => {
   await t.throws(promise, 'query should not be empty');
 });
 
+test('batchAdd: should reject emtpy query error', async (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton);
+  const model = getModel(schema);
+
+  const promise = model.batchAddTags();
+  await t.throws(promise, 'query should not be empty');
+});
+
+
 test('remove: should success remove from collection', (t) => {
   const schema = new mongoose.Schema();
   schema.plugin(stringColleciton);
