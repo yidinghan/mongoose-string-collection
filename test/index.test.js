@@ -258,7 +258,7 @@ test('add: should reject emtpy query error', async (t) => {
   await t.throws(promise, 'query should not be empty');
 });
 
-test('batchAdddd: should success add tags to collections', (t) => {
+test('batchAdd: should success add tags to collections', (t) => {
   const schema = new mongoose.Schema({ id: Number });
   schema.plugin(stringColleciton, { isUnique: true });
   const model = getModel(schema);
@@ -396,6 +396,31 @@ test('batchReplace: should success batchReplace original collection', (t) => {
       return model.findById(bus.docId);
     })
     .then(doc => t.deepEqual(doc.tags, ['t2']));
+});
+
+test('batchReplace: should success Replace tags to collections', (t) => {
+  const schema = new mongoose.Schema({ id: Number });
+  schema.plugin(stringColleciton, { isUnique: true });
+  const model = getModel(schema);
+
+  return model
+    .create([{ tags: ['t', 't1'], id: 1 }, { tags: ['t', 't1'], id: 2 }])
+    .then((docs) => {
+      t.truthy(docs);
+
+      return model.batchReplaceTags({ id: { $in: [1, 2] } }, ['t3']);
+    })
+    .then(({ nModified }) => {
+      t.is(nModified, 2);
+
+      return model.find();
+    })
+    .then((docs) => {
+      t.is(docs.length, 2);
+      docs.forEach((doc) => {
+        t.deepEqual(doc.tags, ['t3']);
+      });
+    });
 });
 
 test('batchReplace: should reject emtpy query error', async (t) => {
