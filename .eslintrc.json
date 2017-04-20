@@ -1,6 +1,14 @@
 {
     "extends": "airbnb-base",
     "rules": {
+        "comma-dangle": [
+            "error",
+            {
+                "arrays": "only-multiline",
+                "objects": "only-multiline",
+                "functions": "never"
+            }
+        ],
         "no-param-reassign": 0
     },
     "plugins": [
