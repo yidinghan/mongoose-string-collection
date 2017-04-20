@@ -41,6 +41,33 @@ test('elementOptions: should override default element options with type:ObjectId
   minimalValidate(t, pathOption, 'ObjectID');
 });
 
+test('elementOptions: should use ObjectI in the database', (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton, {
+    elementOptions: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+  });
+  const model = getModel(schema);
+  const bus = {
+    foo: mongoose.Types.ObjectId(),
+    bar: mongoose.Types.ObjectId(),
+  };
+
+  return model.create({ tags: [bus.foo] })
+    .then((doc) => {
+      t.truthy(doc);
+
+      return model.addTags({ _id: doc._id }, [bus.bar]);
+    })
+    .then((doc) => {
+      t.deepEqual(doc.tags, [bus.foo, bus.bar]);
+
+      return model.findById(doc._id);
+    })
+    .then(doc => t.deepEqual(doc.tags, [bus.foo, bus.bar]));
+});
+
 test('elementOptions: should override default element options', (t) => {
   const schema = new mongoose.Schema();
   schema.plugin(stringColleciton, {
