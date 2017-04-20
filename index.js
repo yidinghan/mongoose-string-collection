@@ -24,10 +24,12 @@ const plugin = (schema, options = {}) => {
   } = options;
 
   const upperName = upperFirst(fieldName);
-  const updateOperator = isUnique ? '$addToSet' : '$push';
+  const pushOperator = isUnique ? '$addToSet' : '$push';
+  const pullOperator = '$pullAll';
   const methods = {
     get: `get${upperName}`,
     add: `add${upperName}`,
+    remove: `remove${upperName}`,
     replace: `replace${upperName}`,
     batchReplace: `batchReplace${upperName}`,
   };
@@ -64,6 +66,43 @@ const plugin = (schema, options = {}) => {
     return this.findOne(query).select(`${fieldName}`).then(document => document && document[fieldName]);
   };
 
+  const updateArguments = (collection, updateOptions) => ({
+    updatePatch: {
+      $set: {
+        [fieldName]: collection,
+      },
+    },
+    operationOpts: Object.assign(defautlUpdateOptions, updateOptions),
+  });
+
+  /**
+   * remove element array from target field
+   *
+   * @param {object} query - mongoose query to find out update target
+   * @param {array} collection - string collection will remove from target document
+   * @return {Promise.<object>} updated target document
+   * @example
+   * // { _id: 'test', tags: ['t1', 't2'] }
+   * model.removeTags({ _id: 'test' }, ['t1']).then(console.log);
+   * // { _id: 'test', tags: ['t2'] }
+   * model.removeTags({ _id: 'test' }, ['t2']).then(console.log);
+   * // { _id: 'test', tags: [] }
+   */
+  schema.statics[methods.remove] = function remove(query, collection, updateOptions) {
+    if (isEmpty(query)) {
+      return Promise.reject(new Error('query should not be empty'));
+    }
+
+    const updatePatch = {
+      [pullOperator]: {
+        [fieldName]: collection,
+      },
+    };
+    const { operationOpts } = updateArguments(collection, updateOptions);
+
+    return this.findOneAndUpdate(query, updatePatch, operationOpts).exec();
+  };
+
   /**
    * add string array to target field
    *
@@ -82,25 +121,16 @@ const plugin = (schema, options = {}) => {
     }
 
     const updatePatch = {
-      [updateOperator]: {
+      [pushOperator]: {
         [fieldName]: {
           $each: collection,
         },
       },
     };
-    const operationOpts = Object.assign(defautlUpdateOptions, updateOptions);
+    const { operationOpts } = updateArguments(collection, updateOptions);
 
     return this.findOneAndUpdate(query, updatePatch, operationOpts).exec();
   };
-
-  const updateArguments = (collection, updateOptions) => ({
-    updatePatch: {
-      $set: {
-        [fieldName]: collection,
-      },
-    },
-    operationOpts: Object.assign(defautlUpdateOptions, updateOptions),
-  });
 
   /**
    * update document's collection filed,
