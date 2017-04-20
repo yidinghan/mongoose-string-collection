@@ -28,6 +28,19 @@ test.after.always('clean up tmp collection', () => {
     .map(dropCollection);
 });
 
+test('elementOptions: should override default element options with type:ObjectId', (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton, {
+    elementOptions: {
+      type: mongoose.Schema.Types.ObjectId,
+    },
+  });
+  const pathOption = schema.path('tags');
+
+  t.truthy(pathOption);
+  minimalValidate(t, pathOption, 'ObjectID');
+});
+
 test('elementOptions: should override default element options', (t) => {
   const schema = new mongoose.Schema();
   schema.plugin(stringColleciton, {
