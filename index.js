@@ -1,7 +1,6 @@
 const upperFirst = require('lodash.upperfirst');
 const isEmpty = require('lodash.isempty');
 
-
 /**
  * a plugin that help schema to build string collection field
  * which is an array containt batch string
@@ -17,22 +16,24 @@ const isEmpty = require('lodash.isempty');
  *      you can also override when using the specified method
  */
 const plugin = (schema, options = {}) => {
-  const {
-    fieldName = 'tags',
-    isIndex = false,
-    isUnique = true,
-  } = options;
-  const elementOptions = Object.assign({
-    type: String,
-    index: isIndex,
-  }, options.elementOptions);
+  const { fieldName = 'tags', isIndex = false, isUnique = true } = options;
+  const elementOptions = Object.assign(
+    {
+      type: String,
+      index: isIndex,
+    },
+    options.elementOptions
+  );
   // after mongoose v4 new is an option
   // to get the updated document
   // instead of updating the previous document
-  const defautlUpdateOptions = Object.assign({
-    new: true,
-    upsert: true,
-  }, options.updateOptions);
+  const defautlUpdateOptions = Object.assign(
+    {
+      new: true,
+      upsert: true,
+    },
+    options.updateOptions
+  );
 
   const upperName = upperFirst(fieldName);
   const pushOperator = isUnique ? '$addToSet' : '$push';
@@ -40,6 +41,7 @@ const plugin = (schema, options = {}) => {
   const methods = {
     get: `get${upperName}`,
     add: `add${upperName}`,
+    batchAdd: `batchAdd${upperName}`,
     remove: `remove${upperName}`,
     replace: `replace${upperName}`,
     batchReplace: `batchReplace${upperName}`,
@@ -64,7 +66,9 @@ const plugin = (schema, options = {}) => {
    * // ['test]
    */
   model.get = function get(query = {}) {
-    return this.findOne(query).select(`${fieldName}`).then(document => document && document[fieldName]);
+    return this.findOne(query)
+      .select(`${fieldName}`)
+      .then(document => document && document[fieldName]);
   };
 
   const updateArguments = (collection, updateOptions) => ({
@@ -136,6 +140,40 @@ const plugin = (schema, options = {}) => {
   };
 
   /**
+   * batch add element to collection
+   *
+   * @memberof model
+   * @param {object} query - mongoose query to find out update target
+   * @param {array} collection - string collection will add to target document
+   * @return {Promise.<object>} mongoose udpate result
+   * @example
+   * model.batchAddTags({ _id: { $in: ['id1', 'id2] } }, ['t1', 't2']).then(console.log);
+   * // { "nMatched" : 2, "nUpserted" : 0, "nModified" : 2 }
+   * model.getTags({ _id: 'id1' }).then(console.log);
+   * // ['t1', 't2']
+   * model.batchAddTags({ _id: { $in: ['id1', 'id2] } }, ['t2', 't3']).then(console.log);
+   * // { "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 }
+   * model.getTags({ _id: 'id2' }).then(console.log);
+   * // ['t1', 't2', 't3']
+   */
+  model.batchAdd = function batchAdd(query, collection, updateOptions) {
+    if (isEmpty(query)) {
+      return Promise.reject(new Error('query should not be empty'));
+    }
+
+    const updatePatch = {
+      [pushOperator]: {
+        [fieldName]: {
+          $each: collection,
+        },
+      },
+    };
+    const { operationOpts } = updateArguments(collection, updateOptions);
+
+    return this.update(query, updatePatch, operationOpts).exec();
+  };
+
+  /**
    * update document's collection filed,
    * which is first document find out by given query.
    * replace collection field with given collection
@@ -155,7 +193,10 @@ const plugin = (schema, options = {}) => {
       return Promise.reject(new Error('query should not be empty'));
     }
 
-    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions);
+    const { updatePatch, operationOpts } = updateArguments(
+      collection,
+      updateOptions
+    );
 
     return this.findOneAndUpdate(query, updatePatch, operationOpts).exec();
   };
@@ -183,7 +224,10 @@ const plugin = (schema, options = {}) => {
       return Promise.reject(new Error('query should not be empty'));
     }
 
-    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions);
+    const { updatePatch, operationOpts } = updateArguments(
+      collection,
+      updateOptions
+    );
 
     return this.update(query, updatePatch, operationOpts).exec();
   };
