@@ -224,6 +224,31 @@ test('remove: should success remove from collection', (t) => {
     .then(doc => t.deepEqual(doc.tags, ['t1']));
 });
 
+test('remove: should success remove all elements', (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton);
+  const model = getModel(schema);
+
+  const bus = {};
+  return model.create({ tags: ['t', 't1', 't2'] })
+    .then((doc) => {
+      t.truthy(doc);
+      bus.docId = doc._id;
+
+      return model.removeTags({ _id: doc._id }, ['t', 't2']);
+    })
+    .then((doc) => {
+      t.deepEqual(doc.tags, ['t1']);
+
+      return model.removeTags({ _id: doc._id }, ['t', 't1']);
+    })
+    .then((doc) => {
+      t.deepEqual(doc.tags, []);
+      return model.findById(bus.docId);
+    })
+    .then(doc => t.deepEqual(doc.tags, []));
+});
+
 test('remove: should reject emtpy query error', async (t) => {
   const schema = new mongoose.Schema();
   schema.plugin(stringColleciton);
