@@ -1,5 +1,7 @@
 # mongoose-string-collection
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/yidinghan/mongoose-string-collection.svg)](https://greenkeeper.io/)
+
 [![Travis](https://img.shields.io/travis/yidinghan/mongoose-string-collection.svg?style=flat-square)]()
 [![npm](https://img.shields.io/npm/l/mongoose-string-collection.svg?style=flat-square)]()
 [![npm](https://img.shields.io/npm/v/mongoose-string-collection.svg?style=flat-square)]()
