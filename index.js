@@ -31,6 +31,7 @@ const plugin = (schema, options = {}) => {
     {
       new: true,
       upsert: true,
+      multi: true,
     },
     options.updateOptions
   );
