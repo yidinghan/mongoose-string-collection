@@ -19,11 +19,14 @@ const minimalValidate = (t, pathOption, casterType = 'String') => {
 };
 
 test.after.always('clean up tmp collection', () => {
-  const dropCollection = collectionName => Promise.fromNode((callback) => {
-    db.db.dropCollection(collectionName, callback);
-  });
+  const dropCollection = collectionName =>
+    Promise.fromNode((callback) => {
+      db.db.dropCollection(collectionName, callback);
+    });
 
-  return Promise.fromNode(callback => db.db.listCollections({ name: /^tmp/ }).toArray(callback))
+  return Promise.fromNode(callback =>
+    db.db.listCollections({ name: /^tmp/ }).toArray(callback)
+  )
     .map(collection => collection.name)
     .map(dropCollection);
 });
@@ -54,7 +57,8 @@ test('elementOptions: should use ObjectI in the database', (t) => {
     bar: mongoose.Types.ObjectId(),
   };
 
-  return model.create({ tags: [bus.foo] })
+  return model
+    .create({ tags: [bus.foo] })
     .then((doc) => {
       t.truthy(doc);
 
@@ -92,7 +96,8 @@ test('updateOptions: should override default update options', (t) => {
   const model = getModel(schema);
 
   const bus = {};
-  return model.create({ tags: ['t', 't1'] })
+  return model
+    .create({ tags: ['t', 't1'] })
     .then((doc) => {
       t.truthy(doc);
       bus.docId = doc._id;
@@ -117,7 +122,8 @@ test('updateOptions: should override default update options on specify method', 
   const model = getModel(schema);
 
   const bus = {};
-  return model.create({ tags: ['t', 't1'] })
+  return model
+    .create({ tags: ['t', 't1'] })
     .then((doc) => {
       t.truthy(doc);
       bus.docId = doc._id;
@@ -164,7 +170,8 @@ test('get: should success get collection', (t) => {
   schema.plugin(stringColleciton);
   const model = getModel(schema);
 
-  return model.create({ tags: ['t3'] })
+  return model
+    .create({ tags: ['t3'] })
     .then(doc => model.getTags({ _id: doc._id }))
     .then((tags) => {
       t.deepEqual(tags, ['t3']);
@@ -176,7 +183,8 @@ test('get: should still get tags withou input', (t) => {
   schema.plugin(stringColleciton);
   const model = getModel(schema);
 
-  return model.create({ tags: ['t3'] })
+  return model
+    .create({ tags: ['t3'] })
     .then(() => model.getTags())
     .then(tags => t.deepEqual(tags, ['t3']));
 });
@@ -187,7 +195,8 @@ test('add: should success add to collection', (t) => {
   const model = getModel(schema);
 
   const bus = {};
-  return model.create({ tags: ['test'] })
+  return model
+    .create({ tags: ['test'] })
     .then((doc) => {
       t.truthy(doc);
       bus.docId = doc._id;
@@ -204,7 +213,8 @@ test('add: should success add to collection with unique opions', (t) => {
   const model = getModel(schema);
 
   const bus = {};
-  return model.create({ tags: ['t', 't1'] })
+  return model
+    .create({ tags: ['t', 't1'] })
     .then((doc) => {
       t.truthy(doc);
       bus.docId = doc._id;
@@ -221,7 +231,8 @@ test('add: should success add to collection with unique opions', (t) => {
   const model = getModel(schema);
 
   const bus = {};
-  return model.create({ tags: ['t', 't1'] })
+  return model
+    .create({ tags: ['t', 't1'] })
     .then((doc) => {
       t.truthy(doc);
       bus.docId = doc._id;
@@ -256,14 +267,14 @@ test('batchAdd: should reject emtpy query error', async (t) => {
   await t.throws(promise, 'query should not be empty');
 });
 
-
 test('remove: should success remove from collection', (t) => {
   const schema = new mongoose.Schema();
   schema.plugin(stringColleciton);
   const model = getModel(schema);
 
   const bus = {};
-  return model.create({ tags: ['t', 't1', 't2'] })
+  return model
+    .create({ tags: ['t', 't1', 't2'] })
     .then((doc) => {
       t.truthy(doc);
       bus.docId = doc._id;
@@ -280,7 +291,8 @@ test('remove: should success remove all elements', (t) => {
   const model = getModel(schema);
 
   const bus = {};
-  return model.create({ tags: ['t', 't1', 't2'] })
+  return model
+    .create({ tags: ['t', 't1', 't2'] })
     .then((doc) => {
       t.truthy(doc);
       bus.docId = doc._id;
@@ -314,7 +326,8 @@ test('replace: should success replace original collection', (t) => {
   const model = getModel(schema);
 
   const bus = {};
-  return model.create({ tags: ['t', 't1'] })
+  return model
+    .create({ tags: ['t', 't1'] })
     .then((doc) => {
       t.truthy(doc);
       bus.docId = doc._id;
@@ -344,7 +357,8 @@ test('batchReplace: should success batchReplace original collection', (t) => {
   const model = getModel(schema);
 
   const bus = {};
-  return model.create({ tags: ['t', 't1'] })
+  return model
+    .create({ tags: ['t', 't1'] })
     .then((doc) => {
       t.truthy(doc);
       bus.docId = doc._id;
