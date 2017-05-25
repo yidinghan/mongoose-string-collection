@@ -24,11 +24,49 @@ test.after.always('clean up tmp collection', () => {
       db.db.dropCollection(collectionName, callback);
     });
 
-  return Promise.fromNode(callback =>
-    db.db.listCollections({ name: /^tmp/ }).toArray(callback)
-  )
+  return Promise.fromNode(callback => db.db.listCollections({ name: /^tmp/ }).toArray(callback))
     .map(collection => collection.name)
     .map(dropCollection);
+});
+
+test('maxLength: should not have size limit without input', (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton);
+  const pathOption = schema.path('tags');
+
+  t.truthy(pathOption);
+  t.is(pathOption.validators.length, 0, 'no customised validator');
+});
+
+test('maxLength: should have 1 validator', (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton, {
+    maxLength: 2,
+  });
+  const pathOption = schema.path('tags');
+
+  t.truthy(pathOption);
+  t.is(pathOption.validators.length, 1, '1 customised validator');
+});
+
+test('maxLength: should faild on validate when add element more then limit', async (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton, {
+    maxLength: 2,
+  });
+
+  const model = getModel(schema);
+
+  const promise = model.create({ tags: ['t', 't1'] }).then((doc) => {
+    t.truthy(doc);
+    doc.tags.push('t2');
+    return doc.save();
+  });
+
+  await t.throws(
+    promise,
+    error => error.errors.tags.message === 'tags exceeds the length limit of 2'
+  );
 });
 
 test('elementOptions: should override default element options with type:ObjectId', (t) => {
@@ -170,12 +208,9 @@ test('get: should success get collection', (t) => {
   schema.plugin(stringColleciton);
   const model = getModel(schema);
 
-  return model
-    .create({ tags: ['t3'] })
-    .then(doc => model.getTags({ _id: doc._id }))
-    .then((tags) => {
-      t.deepEqual(tags, ['t3']);
-    });
+  return model.create({ tags: ['t3'] }).then(doc => model.getTags({ _id: doc._id })).then((tags) => {
+    t.deepEqual(tags, ['t3']);
+  });
 });
 
 test('get: should still get tags withou input', (t) => {
@@ -244,9 +279,7 @@ test('add: should success add to collection with unique opions', (t) => {
 
       return model.findById(bus.docId);
     })
-    .then((doc) => {
-      t.deepEqual(doc.tags, ['t', 't1']);
-    });
+    .then(doc => t.deepEqual(doc.tags, ['t', 't1']));
 });
 
 test('add: should reject emtpy query error', async (t) => {
