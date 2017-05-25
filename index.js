@@ -10,8 +10,8 @@ const isEmpty = require('lodash.isempty');
  * @param {string} [options.fieldName=tags] - the name place in schema
  * @param {boolean} [options.isIndex=false] - whether index in target field
  * @param {boolean} [options.isUnique=true] - whether unique the content in the collection
- * @param {number} [options.maxLength=-1] - max size limit of the colleciton,
- *                  if input bigger then 0 will be take as valid input
+ * @param {number} [options.maxLength=-1] - The maximum size limit for the collection,
+ *                  if the input is greater than 0, will be treated as a valid input
  * @param {object} [options.elementOptions] - collection element options
  * @param {object} [options.updateOptions] - collection default update options
  *                  for add, replace and get methods.
