@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.4.0"></a>
+# [1.4.0](https://github.com/yidinghan/mongoose-string-collection/compare/v1.2.0...v1.4.0) (2017-05-25)
+
+
+### Bug Fixes
+
+* **max length:** should use maxLength in validator ([a2ecbb5](https://github.com/yidinghan/mongoose-string-collection/commit/a2ecbb5))
+
+
+### Features
+
+* **batch remove:** add batch remove support, use model.update ([b72d26c](https://github.com/yidinghan/mongoose-string-collection/commit/b72d26c))
+* **max length:** support max length on colleciton ([567b233](https://github.com/yidinghan/mongoose-string-collection/commit/567b233))
+
+
+
 <a name="1.3.0"></a>
 # [1.3.0](https://github.com/yidinghan/mongoose-string-collection/compare/v1.2.0...v1.3.0) (2017-05-25)
 
