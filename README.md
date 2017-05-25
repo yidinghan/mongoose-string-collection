@@ -26,6 +26,7 @@ A mongoose plugin that can help you quickly develop string collection related re
   - [model](#model)
     - [get](#get)
     - [remove](#remove)
+    - [batchRemove](#batchremove)
     - [add](#add)
     - [batchAdd](#batchadd)
     - [replace](#replace)
@@ -148,8 +149,8 @@ which is an array containt batch string
     -   `options.fieldName` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the name place in schema (optional, default `tags`)
     -   `options.isIndex` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** whether index in target field (optional, default `false`)
     -   `options.isUnique` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** whether unique the content in the collection (optional, default `true`)
-    -   `options.maxLength` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** max size limit of the colleciton,
-                         if input bigger then 0 will be take as valid input (optional, default `-1`)
+    -   `options.maxLength` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The maximum size limit for the collection,
+                         if the input is greater than 0, will be treated as a valid input (optional, default `-1`)
     -   `options.elementOptions` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** collection element options
     -   `options.updateOptions` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** collection default update options
                          for add, replace and get methods.
@@ -184,9 +185,9 @@ remove element array from target field
 
 **Parameters**
 
--   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
+-   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out one update target
 -   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will remove from target document
--   `updateOptions`
+-   `updateOptions`  
 
 **Examples**
 
@@ -200,6 +201,29 @@ model.removeTags({ _id: 'test' }, ['t2']).then(console.log);
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** updated target document
 
+### batchRemove
+
+batch remove element array from target field
+
+**Parameters**
+
+-   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out batch update target
+-   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will remove from batch target document
+-   `updateOptions`  
+
+**Examples**
+
+```javascript
+// { _id: 'test0', foo: 'bar', tags: ['t2'] }
+// { _id: 'test1', foo: 'bar', tags: ['t1', 't2'] }
+model.removeTags({ foo: 'bar' }, ['t1']).then(console.log);
+// { "nMatched" : 2, "nUpserted" : 0, "nModified" : 1 }
+model.removeTags({ foo: 'bar' }, ['t2']).then(console.log);
+// { "nMatched" : 2, "nUpserted" : 0, "nModified" : 2 }
+```
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** mongoose udpate result
+
 ### add
 
 add string array to target field
@@ -208,7 +232,7 @@ add string array to target field
 
 -   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
 -   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will add to target document
--   `updateOptions`
+-   `updateOptions`  
 
 **Examples**
 
@@ -229,7 +253,7 @@ batch add element to collection
 
 -   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
 -   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will add to target document
--   `updateOptions`
+-   `updateOptions`  
 
 **Examples**
 
@@ -256,7 +280,7 @@ replace collection field with given collection
 
 -   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
 -   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will add to target document
--   `updateOptions`
+-   `updateOptions`  
 
 **Examples**
 
@@ -278,7 +302,7 @@ by replace it with given collection
 
 -   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
 -   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will add to target document
--   `updateOptions`
+-   `updateOptions`  
 
 **Examples**
 
