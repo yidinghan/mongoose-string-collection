@@ -10,10 +10,12 @@ const isEmpty = require('lodash.isempty');
  * @param {string} [options.fieldName=tags] - the name place in schema
  * @param {boolean} [options.isIndex=false] - whether index in target field
  * @param {boolean} [options.isUnique=true] - whether unique the content in the collection
+ * @param {number} [options.maxLength=-1] - max size limit of the colleciton,
+ *                  if input bigger then 0 will be take as valid input
  * @param {object} [options.elementOptions] - collection element options
  * @param {object} [options.updateOptions] - collection default update options
- *      for add, replace and get methods.
- *      you can also override when using the specified method
+ *                  for add, replace and get methods.
+ *                  you can also override when using the specified method
  */
 const plugin = (schema, options = {}) => {
   const { fieldName = 'tags', isIndex = false, isUnique = true, maxLength = -1 } = options;
@@ -27,7 +29,7 @@ const plugin = (schema, options = {}) => {
   const fieldOptions = {
     type: [elementOptions],
   };
-  if (maxLength > 1) {
+  if (maxLength > 0) {
     fieldOptions.vlaidate = [value => value.length <= 10, `{PATH} exceeds the length limit of ${maxLength}`];
   }
 
