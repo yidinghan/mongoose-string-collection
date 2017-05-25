@@ -29,6 +29,61 @@ test.after.always('clean up tmp collection', () => {
     .map(dropCollection);
 });
 
+test('batchRemove: should success batchRemove original collection', (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton);
+  const model = getModel(schema);
+
+  const bus = {};
+  return model
+    .create({ tags: ['t', 't1'] })
+    .then((doc) => {
+      t.truthy(doc);
+      bus.docId = doc._id;
+
+      return model.batchRemoveTags({ _id: doc._id }, ['t1']);
+    })
+    .then(({ nModified }) => {
+      t.is(nModified, 1);
+
+      return model.findById(bus.docId);
+    })
+    .then(doc => t.deepEqual(doc.tags, ['t']));
+});
+
+test('batchRemove: should success Remove tags to collections', (t) => {
+  const schema = new mongoose.Schema({ id: Number });
+  schema.plugin(stringColleciton, { isUnique: true });
+  const model = getModel(schema);
+
+  return model
+    .create([{ tags: ['t', 't1'], id: 1 }, { tags: ['t1'], id: 2 }])
+    .then((docs) => {
+      t.truthy(docs);
+
+      return model.batchRemoveTags({ id: { $in: [1, 2] } }, ['t1']);
+    })
+    .then(({ nModified }) => {
+      t.is(nModified, 2);
+
+      return Promise.all([model.findOne({ id: 1 }), model.findOne({ id: 2 })]);
+    })
+    .then(([doc1, doc2]) => {
+      t.deepEqual(doc1.tags, ['t']);
+      t.deepEqual(doc2.tags, []);
+    });
+});
+
+test('batchRemove: should reject emtpy query error', async (t) => {
+  const schema = new mongoose.Schema();
+  schema.plugin(stringColleciton);
+  const model = getModel(schema);
+
+  const promise = model.batchRemoveTags();
+  await t.throws(promise, 'query should not be empty');
+});
+
+
 test('maxLength: should not have size limit without input', (t) => {
   const schema = new mongoose.Schema();
   schema.plugin(stringColleciton);
