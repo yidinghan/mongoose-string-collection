@@ -30,7 +30,10 @@ const plugin = (schema, options = {}) => {
     type: [elementOptions],
   };
   if (maxLength > 0) {
-    fieldOptions.validate = [value => value.length <= maxLength, `{PATH} exceeds the length limit of ${maxLength}`];
+    fieldOptions.validate = [
+      value => value.length <= maxLength,
+      `{PATH} exceeds the length limit of ${maxLength}`,
+    ];
   }
 
   // after mongoose v4 new is an option
@@ -81,14 +84,29 @@ const plugin = (schema, options = {}) => {
       .then(document => document && document[fieldName]);
   };
 
-  const updateArguments = (collection, updateOptions) => ({
-    updatePatch: {
-      $set: {
-        [fieldName]: collection,
-      },
-    },
-    operationOpts: Object.assign(defautlUpdateOptions, updateOptions),
-  });
+  const updateArguments = (collection, updateOptions, isReplace = false) => {
+    const result = {
+      operationOpts: Object.assign(defautlUpdateOptions, updateOptions),
+    };
+
+    if (isReplace) {
+      result.updatePatch = {
+        $set: {
+          [fieldName]: collection,
+        },
+      };
+    } else {
+      result.updatePatch = {
+        [pushOperator]: {
+          [fieldName]: {
+            $each: collection,
+          },
+        },
+      };
+    }
+
+    return result;
+  };
 
   /**
    * remove element array from target field
@@ -137,14 +155,7 @@ const plugin = (schema, options = {}) => {
       return Promise.reject(new Error('query should not be empty'));
     }
 
-    const updatePatch = {
-      [pushOperator]: {
-        [fieldName]: {
-          $each: collection,
-        },
-      },
-    };
-    const { operationOpts } = updateArguments(collection, updateOptions);
+    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions);
 
     return this.findOneAndUpdate(query, updatePatch, operationOpts).exec();
   };
@@ -171,14 +182,7 @@ const plugin = (schema, options = {}) => {
       return Promise.reject(new Error('query should not be empty'));
     }
 
-    const updatePatch = {
-      [pushOperator]: {
-        [fieldName]: {
-          $each: collection,
-        },
-      },
-    };
-    const { operationOpts } = updateArguments(collection, updateOptions);
+    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions);
 
     return this.update(query, updatePatch, operationOpts).exec();
   };
@@ -203,7 +207,7 @@ const plugin = (schema, options = {}) => {
       return Promise.reject(new Error('query should not be empty'));
     }
 
-    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions);
+    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions, true);
 
     return this.findOneAndUpdate(query, updatePatch, operationOpts).exec();
   };
@@ -231,7 +235,7 @@ const plugin = (schema, options = {}) => {
       return Promise.reject(new Error('query should not be empty'));
     }
 
-    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions);
+    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions, true);
 
     return this.update(query, updatePatch, operationOpts).exec();
   };
