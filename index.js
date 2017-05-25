@@ -56,6 +56,7 @@ const plugin = (schema, options = {}) => {
     add: `add${upperName}`,
     batchAdd: `batchAdd${upperName}`,
     remove: `remove${upperName}`,
+    batchRemove: `batchRemove${upperName}`,
     replace: `replace${upperName}`,
     batchReplace: `batchReplace${upperName}`,
   };
@@ -112,7 +113,7 @@ const plugin = (schema, options = {}) => {
    * remove element array from target field
    *
    * @memberof model
-   * @param {object} query - mongoose query to find out update target
+   * @param {object} query - mongoose query to find out one update target
    * @param {array} collection - string collection will remove from target document
    * @return {Promise.<object>} updated target document
    * @example
@@ -135,6 +136,36 @@ const plugin = (schema, options = {}) => {
     const { operationOpts } = updateArguments(collection, updateOptions);
 
     return this.findOneAndUpdate(query, updatePatch, operationOpts).exec();
+  };
+
+  /**
+   * batch remove element array from target field
+   *
+   * @memberof model
+   * @param {object} query - mongoose query to find out batch update target
+   * @param {array} collection - string collection will remove from batch target document
+   * @return {Promise.<object>} mongoose udpate result
+   * @example
+   * // { _id: 'test0', foo: 'bar', tags: ['t2'] }
+   * // { _id: 'test1', foo: 'bar', tags: ['t1', 't2'] }
+   * model.removeTags({ foo: 'bar' }, ['t1']).then(console.log);
+   * // { "nMatched" : 2, "nUpserted" : 0, "nModified" : 1 }
+   * model.removeTags({ foo: 'bar' }, ['t2']).then(console.log);
+   * // { "nMatched" : 2, "nUpserted" : 0, "nModified" : 2 }
+   */
+  model.batchRemove = function batchReplace(query, collection, updateOptions) {
+    if (isEmpty(query)) {
+      return Promise.reject(new Error('query should not be empty'));
+    }
+
+    const updatePatch = {
+      [pullOperator]: {
+        [fieldName]: collection,
+      },
+    };
+    const { operationOpts } = updateArguments(collection, updateOptions);
+
+    return this.update(query, updatePatch, operationOpts).exec();
   };
 
   /**
