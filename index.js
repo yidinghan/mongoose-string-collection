@@ -30,7 +30,7 @@ const plugin = (schema, options = {}) => {
     type: [elementOptions],
   };
   if (maxLength > 0) {
-    fieldOptions.vlaidate = [value => value.length <= 10, `{PATH} exceeds the length limit of ${maxLength}`];
+    fieldOptions.validate = [value => value.length <= maxLength, `{PATH} exceeds the length limit of ${maxLength}`];
   }
 
   // after mongoose v4 new is an option
