@@ -16,7 +16,7 @@ const isEmpty = require('lodash.isempty');
  *      you can also override when using the specified method
  */
 const plugin = (schema, options = {}) => {
-  const { fieldName = 'tags', isIndex = false, isUnique = true } = options;
+  const { fieldName = 'tags', isIndex = false, isUnique = true, maxLength = -1 } = options;
   const elementOptions = Object.assign(
     {
       type: String,
@@ -24,6 +24,13 @@ const plugin = (schema, options = {}) => {
     },
     options.elementOptions
   );
+  const fieldOptions = {
+    type: [elementOptions],
+  };
+  if (maxLength > 1) {
+    fieldOptions.vlaidate = [value => value.length <= 10, `{PATH} exceeds the length limit of ${maxLength}`];
+  }
+
   // after mongoose v4 new is an option
   // to get the updated document
   // instead of updating the previous document
@@ -194,10 +201,7 @@ const plugin = (schema, options = {}) => {
       return Promise.reject(new Error('query should not be empty'));
     }
 
-    const { updatePatch, operationOpts } = updateArguments(
-      collection,
-      updateOptions
-    );
+    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions);
 
     return this.findOneAndUpdate(query, updatePatch, operationOpts).exec();
   };
@@ -225,16 +229,13 @@ const plugin = (schema, options = {}) => {
       return Promise.reject(new Error('query should not be empty'));
     }
 
-    const { updatePatch, operationOpts } = updateArguments(
-      collection,
-      updateOptions
-    );
+    const { updatePatch, operationOpts } = updateArguments(collection, updateOptions);
 
     return this.update(query, updatePatch, operationOpts).exec();
   };
 
   schema.add({
-    [fieldName]: [elementOptions],
+    [fieldName]: fieldOptions,
   });
   Object.keys(methods).forEach((key) => {
     schema.statics[methods[key]] = model[key];
