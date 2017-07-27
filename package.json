@@ -30,7 +30,7 @@
   "devDependencies": {
     "ava": "^0.19.1",
     "bluebird": "^3.5.0",
-    "documentation": "^4.0.0-rc.1",
+    "documentation": "^5.0.0",
     "eslint": "^4.1.1",
     "eslint-config-airbnb-base": "^11.2.0",
     "eslint-plugin-import": "^2.6.0",
