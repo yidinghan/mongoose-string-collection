@@ -13,24 +13,24 @@ A mongoose plugin that can help you quickly develop string collection related re
 
 <!-- TOC -->
 
-- [mongoose-string-collection](#mongoose-string-collection)
-- [Getting Start](#getting-start)
-  - [NPM](#npm)
-  - [Usage](#usage)
-- [Configuration](#configuration)
-    - [Different Field Name](#different-field-name)
-    - [Index Elements/Collection](#index-elementscollection)
-    - [Unique In Collection](#unique-in-collection)
-- [JSDoc](#jsdoc)
-  - [plugin](#plugin)
-  - [model](#model)
-    - [get](#get)
-    - [remove](#remove)
-    - [batchRemove](#batchremove)
-    - [add](#add)
-    - [batchAdd](#batchadd)
-    - [replace](#replace)
-    - [batchReplace](#batchreplace)
+-   [mongoose-string-collection](#mongoose-string-collection)
+-   [Getting Start](#getting-start)
+    -   [NPM](#npm)
+    -   [Usage](#usage)
+-   [Configuration](#configuration)
+    -   [Different Field Name](#different-field-name)
+    -   [Index Elements/Collection](#index-elementscollection)
+    -   [Unique In Collection](#unique-in-collection)
+-   [JSDoc](#jsdoc)
+    -   [plugin](#plugin)
+    -   [model](#model)
+        -   [get](#get)
+        -   [remove](#remove)
+        -   [batchRemove](#batchremove)
+        -   [add](#add)
+        -   [batchAdd](#batchadd)
+        -   [replace](#replace)
+        -   [batchReplace](#batchreplace)
 
 <!-- /TOC -->
 
@@ -145,14 +145,14 @@ which is an array containt batch string
 **Parameters**
 
 -   `schema` **MongooseSchema** mongoose schema that use this plugin
--   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** plugin configuration (optional, default `{}`)
+-   `options` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** plugin configuration (optional, default `{}`)
     -   `options.fieldName` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** the name place in schema (optional, default `tags`)
     -   `options.isIndex` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** whether index in target field (optional, default `false`)
     -   `options.isUnique` **[boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)** whether unique the content in the collection (optional, default `true`)
     -   `options.maxLength` **[number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)** The maximum size limit for the collection,
                          if the input is greater than 0, will be treated as a valid input (optional, default `-1`)
-    -   `options.elementOptions` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** collection element options
-    -   `options.updateOptions` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** collection default update options
+    -   `options.elementOptions` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** collection element options
+    -   `options.updateOptions` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)?** collection default update options
                          for add, replace and get methods.
                          you can also override when using the specified method
 
@@ -164,7 +164,7 @@ sugar method that get target filed as single result
 
 **Parameters**
 
--   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query that place in this.findOne (optional, default `{}`)
+-   `query` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query that place in this.findOne (optional, default `{}`)
 
 **Examples**
 
@@ -185,7 +185,7 @@ remove element array from target field
 
 **Parameters**
 
--   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out one update target
+-   `query` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out one update target
 -   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will remove from target document
 -   `updateOptions`  
 
@@ -199,7 +199,7 @@ model.removeTags({ _id: 'test' }, ['t2']).then(console.log);
 // { _id: 'test', tags: [] }
 ```
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** updated target document
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** updated target document
 
 ### batchRemove
 
@@ -207,7 +207,7 @@ batch remove element array from target field
 
 **Parameters**
 
--   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out batch update target
+-   `query` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out batch update target
 -   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will remove from batch target document
 -   `updateOptions`  
 
@@ -222,7 +222,7 @@ model.removeTags({ foo: 'bar' }, ['t2']).then(console.log);
 // { "nMatched" : 2, "nUpserted" : 0, "nModified" : 2 }
 ```
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** mongoose udpate result
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** mongoose udpate result
 
 ### add
 
@@ -278,7 +278,7 @@ replace collection field with given collection
 
 **Parameters**
 
--   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
+-   `query` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
 -   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will add to target document
 -   `updateOptions`  
 
@@ -291,7 +291,7 @@ model.replaceTags({ _id: 'test' }, ['t2', 't3']).then(console.log);
 // { _id: 'test', tags: ['t2', 't3'] }
 ```
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** mongoose udpate result
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** mongoose udpate result
 
 ### batchReplace
 
@@ -300,7 +300,7 @@ by replace it with given collection
 
 **Parameters**
 
--   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
+-   `query` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
 -   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will add to target document
 -   `updateOptions`  
 
@@ -317,4 +317,4 @@ model.getTags({ _id: 'test' }).then(console.log);
 // ['t2', 't3']
 ```
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** mongoose udpate result
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** mongoose udpate result

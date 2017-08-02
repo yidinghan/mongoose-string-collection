@@ -6,14 +6,14 @@ const isEmpty = require('lodash.isempty');
  * which is an array containt batch string
  *
  * @param {MongooseSchema} schema - mongoose schema that use this plugin
- * @param {object} [options] - plugin configuration
+ * @param {Object} [options] - plugin configuration
  * @param {string} [options.fieldName=tags] - the name place in schema
  * @param {boolean} [options.isIndex=false] - whether index in target field
  * @param {boolean} [options.isUnique=true] - whether unique the content in the collection
  * @param {number} [options.maxLength=-1] - The maximum size limit for the collection,
  *                  if the input is greater than 0, will be treated as a valid input
- * @param {object} [options.elementOptions] - collection element options
- * @param {object} [options.updateOptions] - collection default update options
+ * @param {Object} [options.elementOptions] - collection element options
+ * @param {Object} [options.updateOptions] - collection default update options
  *                  for add, replace and get methods.
  *                  you can also override when using the specified method
  */
@@ -69,7 +69,7 @@ const plugin = (schema, options = {}) => {
    * sugar method that get target filed as single result
    *
    * @memberof model
-   * @param {object} [query={}] - mongoose query that place in this.findOne
+   * @param {Object} [query={}] - mongoose query that place in this.findOne
    * @return {Promise.<array>} target field
    * @example
    * model.getTags({ _id: 'targetnotexists' }).then(console.log);
@@ -113,9 +113,9 @@ const plugin = (schema, options = {}) => {
    * remove element array from target field
    *
    * @memberof model
-   * @param {object} query - mongoose query to find out one update target
+   * @param {Object} query - mongoose query to find out one update target
    * @param {array} collection - string collection will remove from target document
-   * @return {Promise.<object>} updated target document
+   * @return {Promise.<Object>} updated target document
    * @example
    * // { _id: 'test', tags: ['t1', 't2'] }
    * model.removeTags({ _id: 'test' }, ['t1']).then(console.log);
@@ -142,9 +142,9 @@ const plugin = (schema, options = {}) => {
    * batch remove element array from target field
    *
    * @memberof model
-   * @param {object} query - mongoose query to find out batch update target
+   * @param {Object} query - mongoose query to find out batch update target
    * @param {array} collection - string collection will remove from batch target document
-   * @return {Promise.<object>} mongoose udpate result
+   * @return {Promise.<Object>} mongoose udpate result
    * @example
    * // { _id: 'test0', foo: 'bar', tags: ['t2'] }
    * // { _id: 'test1', foo: 'bar', tags: ['t1', 't2'] }
@@ -224,9 +224,9 @@ const plugin = (schema, options = {}) => {
    * replace collection field with given collection
    *
    * @memberof model
-   * @param {object} query - mongoose query to find out update target
+   * @param {Object} query - mongoose query to find out update target
    * @param {array} collection - string collection will add to target document
-   * @return {Promise.<object>} mongoose udpate result
+   * @return {Promise.<Object>} mongoose udpate result
    * @example
    * model.replaceTags({ _id: 'test' }, ['t1']).then(console.log);
    * // { _id: 'test', tags: ['t1'] }
@@ -248,9 +248,9 @@ const plugin = (schema, options = {}) => {
    * by replace it with given collection
    *
    * @memberof model
-   * @param {object} query - mongoose query to find out update target
+   * @param {Object} query - mongoose query to find out update target
    * @param {array} collection - string collection will add to target document
-   * @return {Promise.<object>} mongoose udpate result
+   * @return {Promise.<Object>} mongoose udpate result
    * @example
    * model.batchReplaceTags({ _id: 'test' }, ['t1']).then(console.log);
    * // { "nMatched" : 1, "nUpserted" : 0, "nModified" : 1 }
