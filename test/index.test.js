@@ -48,7 +48,7 @@ test('batchRemove: should success batchRemove original collection', (t) => {
 
       return model.findById(bus.docId);
     })
-    .then(doc => t.deepEqual(doc.tags, ['t']));
+    .then(doc => t.deepEqual(doc.tags.toObject(), ['t']));
 });
 
 test('batchRemove: should success Remove tags to collections', (t) => {
@@ -69,8 +69,8 @@ test('batchRemove: should success Remove tags to collections', (t) => {
       return Promise.all([model.findOne({ id: 1 }), model.findOne({ id: 2 })]);
     })
     .then(([doc1, doc2]) => {
-      t.deepEqual(doc1.tags, ['t']);
-      t.deepEqual(doc2.tags, []);
+      t.deepEqual(doc1.tags.toObject(), ['t']);
+      t.deepEqual(doc2.tags.toObject(), []);
     });
 });
 
@@ -158,11 +158,11 @@ test('elementOptions: should use ObjectI in the database', (t) => {
       return model.addTags({ _id: doc._id }, [bus.bar]);
     })
     .then((doc) => {
-      t.deepEqual(doc.tags, [bus.foo, bus.bar]);
+      t.deepEqual(doc.tags.toObject(), [bus.foo, bus.bar]);
 
       return model.findById(doc._id);
     })
-    .then(doc => t.deepEqual(doc.tags, [bus.foo, bus.bar]));
+    .then(doc => t.deepEqual(doc.tags.toObject(), [bus.foo, bus.bar]));
 });
 
 test('elementOptions: should override default element options', (t) => {
@@ -198,11 +198,11 @@ test('updateOptions: should override default update options', (t) => {
       return model.addTags({ _id: doc._id }, ['t2']);
     })
     .then((doc) => {
-      t.deepEqual(doc.tags, ['t', 't1']);
+      t.deepEqual(doc.tags.toObject(), ['t', 't1']);
 
       return model.findById(bus.docId);
     })
-    .then(doc => t.deepEqual(doc.tags, ['t', 't1', 't2']));
+    .then(doc => t.deepEqual(doc.tags.toObject(), ['t', 't1', 't2']));
 });
 
 test('updateOptions: should override default update options on specify method', (t) => {
@@ -224,11 +224,11 @@ test('updateOptions: should override default update options on specify method', 
       return model.addTags({ _id: doc._id }, ['t2'], { new: true });
     })
     .then((doc) => {
-      t.deepEqual(doc.tags, ['t', 't1', 't2']);
+      t.deepEqual(doc.tags.toObject(), ['t', 't1', 't2']);
 
       return model.findById(bus.docId);
     })
-    .then(doc => t.deepEqual(doc.tags, ['t', 't1', 't2']));
+    .then(doc => t.deepEqual(doc.tags.toObject(), ['t', 't1', 't2']));
 });
 
 test('fieldName: should exists target filed name', (t) => {
@@ -264,7 +264,7 @@ test('get: should success get collection', (t) => {
   const model = getModel(schema);
 
   return model.create({ tags: ['t3'] }).then(doc => model.getTags({ _id: doc._id })).then((tags) => {
-    t.deepEqual(tags, ['t3']);
+    t.deepEqual(tags.toObject(), ['t3']);
   });
 });
 
@@ -276,7 +276,7 @@ test('get: should still get tags withou input', (t) => {
   return model
     .create({ tags: ['t3'] })
     .then(() => model.getTags())
-    .then(tags => t.deepEqual(tags, ['t3']));
+    .then(tags => t.deepEqual(tags.toObject(), ['t3']));
 });
 
 test('add: should success add to collection', (t) => {
@@ -294,7 +294,7 @@ test('add: should success add to collection', (t) => {
       return model.addTags({ _id: doc._id }, ['test2']);
     })
     .then(() => model.findById(bus.docId))
-    .then(doc => t.deepEqual(doc.tags, ['test', 'test2']));
+    .then(doc => t.deepEqual(doc.tags.toObject(), ['test', 'test2']));
 });
 
 test('add: should success add to collection with unique opions', (t) => {
@@ -312,7 +312,7 @@ test('add: should success add to collection with unique opions', (t) => {
       return model.addTags({ _id: doc._id }, ['t1']);
     })
     .then(() => model.findById(bus.docId))
-    .then(doc => t.deepEqual(doc.tags, ['t', 't1', 't1']));
+    .then(doc => t.deepEqual(doc.tags.toObject(), ['t', 't1', 't1']));
 });
 
 test('add: should success add to collection with unique opions', (t) => {
@@ -330,11 +330,11 @@ test('add: should success add to collection with unique opions', (t) => {
       return model.addTags({ _id: doc._id }, ['t1']);
     })
     .then((doc) => {
-      t.deepEqual(doc.tags, ['t', 't1']);
+      t.deepEqual(doc.tags.toObject(), ['t', 't1']);
 
       return model.findById(bus.docId);
     })
-    .then(doc => t.deepEqual(doc.tags, ['t', 't1']));
+    .then(doc => t.deepEqual(doc.tags.toObject(), ['t', 't1']));
 });
 
 test('add: should reject emtpy query error', async (t) => {
@@ -366,7 +366,7 @@ test('batchAdd: should success add tags to collections', (t) => {
     .then((docs) => {
       t.is(docs.length, 2);
       docs.forEach((doc) => {
-        t.deepEqual(doc.tags, ['t', 't1', 't3']);
+        t.deepEqual(doc.tags.toObject(), ['t', 't1', 't3']);
       });
     });
 });
@@ -395,7 +395,7 @@ test('remove: should success remove from collection', (t) => {
       return model.removeTags({ _id: doc._id }, ['t', 't2']);
     })
     .then(() => model.findById(bus.docId))
-    .then(doc => t.deepEqual(doc.tags, ['t1']));
+    .then(doc => t.deepEqual(doc.tags.toObject(), ['t1']));
 });
 
 test('remove: should success remove all elements', (t) => {
@@ -413,15 +413,15 @@ test('remove: should success remove all elements', (t) => {
       return model.removeTags({ _id: doc._id }, ['t', 't2']);
     })
     .then((doc) => {
-      t.deepEqual(doc.tags, ['t1']);
+      t.deepEqual(doc.tags.toObject(), ['t1']);
 
       return model.removeTags({ _id: doc._id }, ['t', 't1']);
     })
     .then((doc) => {
-      t.deepEqual(doc.tags, []);
+      t.deepEqual(doc.tags.toObject(), []);
       return model.findById(bus.docId);
     })
-    .then(doc => t.deepEqual(doc.tags, []));
+    .then(doc => t.deepEqual(doc.tags.toObject(), []));
 });
 
 test('remove: should reject emtpy query error', async (t) => {
@@ -448,11 +448,11 @@ test('replace: should success replace original collection', (t) => {
       return model.replaceTags({ _id: doc._id }, ['t2']);
     })
     .then((doc) => {
-      t.deepEqual(doc.tags, ['t2']);
+      t.deepEqual(doc.tags.toObject(), ['t2']);
 
       return model.findById(doc._id);
     })
-    .then(doc => t.deepEqual(doc.tags, ['t2']));
+    .then(doc => t.deepEqual(doc.tags.toObject(), ['t2']));
 });
 
 test('replace: should reject emtpy query error', async (t) => {
@@ -483,7 +483,7 @@ test('batchReplace: should success batchReplace original collection', (t) => {
 
       return model.findById(bus.docId);
     })
-    .then(doc => t.deepEqual(doc.tags, ['t2']));
+    .then(doc => t.deepEqual(doc.tags.toObject(), ['t2']));
 });
 
 test('batchReplace: should success Replace tags to collections', (t) => {
@@ -506,7 +506,7 @@ test('batchReplace: should success Replace tags to collections', (t) => {
     .then((docs) => {
       t.is(docs.length, 2);
       docs.forEach((doc) => {
-        t.deepEqual(doc.tags, ['t3']);
+        t.deepEqual(doc.tags.toObject(), ['t3']);
       });
     });
 });
