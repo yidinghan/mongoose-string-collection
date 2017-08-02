@@ -230,7 +230,7 @@ add string array to target field
 
 **Parameters**
 
--   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
+-   `query` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
 -   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will add to target document
 -   `updateOptions`  
 
@@ -243,7 +243,7 @@ model.addTags({ _id: 'test' }, ['t2']).then(console.log);
 // { _id: 'test', tags: ['t1', 't2'] }
 ```
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** updated target document
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** updated target document
 
 ### batchAdd
 
@@ -251,7 +251,7 @@ batch add element to collection
 
 **Parameters**
 
--   `query` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
+-   `query` **[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** mongoose query to find out update target
 -   `collection` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** string collection will add to target document
 -   `updateOptions`  
 
@@ -268,7 +268,7 @@ model.getTags({ _id: 'id2' }).then(console.log);
 // ['t1', 't2', 't3']
 ```
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** mongoose udpate result
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)&lt;[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>** mongoose udpate result
 
 ### replace
 

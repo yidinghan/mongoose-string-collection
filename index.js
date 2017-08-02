@@ -172,9 +172,9 @@ const plugin = (schema, options = {}) => {
    * add string array to target field
    *
    * @memberof model
-   * @param {object} query - mongoose query to find out update target
+   * @param {Object} query - mongoose query to find out update target
    * @param {array} collection - string collection will add to target document
-   * @return {Promise.<object>} updated target document
+   * @return {Promise.<Object>} updated target document
    * @example
    * model.addTags({ _id: 'test' }, ['t1']).then(console.log);
    * // { _id: 'test', tags: ['t1'] }
@@ -195,9 +195,9 @@ const plugin = (schema, options = {}) => {
    * batch add element to collection
    *
    * @memberof model
-   * @param {object} query - mongoose query to find out update target
+   * @param {Object} query - mongoose query to find out update target
    * @param {array} collection - string collection will add to target document
-   * @return {Promise.<object>} mongoose udpate result
+   * @return {Promise.<Object>} mongoose udpate result
    * @example
    * model.batchAddTags({ _id: { $in: ['id1', 'id2] } }, ['t1', 't2']).then(console.log);
    * // { "nMatched" : 2, "nUpserted" : 0, "nModified" : 2 }
