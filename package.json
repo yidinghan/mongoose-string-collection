@@ -28,7 +28,7 @@
     "mongoose": "^4.9.7"
   },
   "devDependencies": {
-    "ava": "^0.24.0",
+    "ava": "^2.2.0",
     "bluebird": "^3.5.0",
     "documentation": "^6.0.0",
     "eslint": "^4.1.1",
